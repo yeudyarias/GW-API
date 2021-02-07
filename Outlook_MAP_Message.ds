@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testcase  name= '' description='' author='' version=''>
+<dpl filename='SERVER/C:/CICD_NewDashboard/Sanity_Test/scenario/TaxForm.csv' exectype='runstepbystep' errorhandling='' type='JsDPL'/>
+<fallback useFallback='false'/>
+<step action='navigateTo' value='"https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&amp;redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&amp;resource=00000002-0000-0ff1-ce00-000000000000&amp;response_mode=form_post&amp;response_type=code+id_token&amp;scope=openid&amp;msafed=0&amp;client-request-id=9643ad95-470e-45e7-b8fa-7c63aa7c82a0&amp;protectedtoken=true&amp;domain_hint=appvance.com&amp;nonce=636994803500836226.c223861f-1647-4ee8-8d7f-199bd148ffc9&amp;state=FYtLDgIhEAVB78KOmeZj0yyIZ8EGVuBMxjh6fHFRL6mXlBRCXCeXiYQ5IqDDGD2BuwGQQ2txYWsdoWnaoA_a10qaSpga46MYT61xlLPFdfvk9X7U3EfK-37mJ9eFt6Hq93W-j56M6l0zJwPOqbGV_wc_"' type='web' desc='Navigate to the Office365 website' isThinkTime='false' isCommented='false' sequence='0'>
+  <dialect type='sahi'>
+   <accessor type='navigateTo' value='' selected='true'/>
+</dialect>
+</step>
+<step action='selectWindow' value='[&quot;Mail - Tester&quot;]' type='web' desc='' isThinkTime='false' isCommented='false' sequence='0'>
+  <dialect type='sahi'>
+   <accessor type='selectWindow' value='' selected='true'/>
+</dialect>
+</step>
+<step action='click' value='""' type='web' desc='' isThinkTime='false' isCommented='false' sequence='0'>
+  <dialect type='sahi'>
+   <accessor type='click' value='span([&quot;Welcome to the Member Assistance Portal (MAP)&quot;])' selected='true'/>
+   <accessor type='click' value='span(299)' selected='false'/>
+   <accessor type='click' value='span(&quot;lvHighlightAllClass lvHighlightSubjectClass&quot;)' selected='false'/>
+   <accessor type='click' value='span([&quot;Welcome to the Member Assistance Po&quot;])' selected='false'/>
+</dialect>
+</step>
+<step action='wait' value='6000' type='web' desc='' isThinkTime='false' isCommented='false' sequence='0'>
+  <dialect type='sahi'>
+   <accessor type='wait' value='' selected='true'/>
+</dialect>
+</step>
+</testcase>

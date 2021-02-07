@@ -1,0 +1,11 @@
+com/longiara/api/models/entity/Especialidad.class
+com/longiara/api/models/dao/IEspecialidadDao.class
+com/longiara/api/models/services/impl/EspecialidadServiceImpl.class
+com/longiara/api/controllers/EspecialidadRestController.class
+com/longiara/api/models/services/IUsuarioClinicoService.class
+com/longiara/api/models/entity/UsuarioClinico.class
+com/longiara/api/LongiaraApplication.class
+com/longiara/api/models/dao/IUsuarioClinicoDao.class
+com/longiara/api/controllers/UsuarioClinicoRestController.class
+com/longiara/api/models/services/impl/UsuarioClinicoServiceImpl.class
+com/longiara/api/models/services/IEspecialidadService.class

@@ -1,0 +1,11 @@
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/LongiaraApplication.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/dao/IUsuarioClinicoDao.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/entity/UsuarioClinico.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/services/IEspecialidadService.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/dao/IEspecialidadDao.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/controllers/UsuarioClinicoRestController.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/services/impl/UsuarioClinicoServiceImpl.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/services/impl/EspecialidadServiceImpl.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/services/IUsuarioClinicoService.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/models/entity/Especialidad.java
+/Users/yeudyariasalfaro/Documents/SCE/JavaApp/LongiaraApi/src/main/java/com/longiara/api/controllers/EspecialidadRestController.java
