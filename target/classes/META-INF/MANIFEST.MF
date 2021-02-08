@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Implementation-Title: longiara
-Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: yeudyariasalfaro
+Build-Jdk: 15.0.1
+Implementation-Title: GW
+Implementation-Version: 0.0.1-SNAPSHOT
 Implementation-Vendor-Id: com.longiara.api
-Build-Jdk: 1.8.0_241
-Implementation-URL: http://projects.spring.io/spring-boot/spring-boot-
- starter-parent/longiara-api/
+Implementation-URL: http://projects.spring.io/spring-boot/spring-boot-st
+ arter-parent/GW-API/
 Created-By: Maven Integration for Eclipse
 
