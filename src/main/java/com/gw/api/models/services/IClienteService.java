@@ -5,20 +5,20 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.gw.api.models.entity.Cliente;
 import com.gw.api.models.entity.Factura;
 import com.gw.api.models.entity.Producto;
 import com.gw.api.models.entity.Region;
-import com.gw.api.models.entity.UsuarioClinico;
 
 public interface IClienteService {
 
-	public List<UsuarioClinico> findAll();
+	public List<Cliente> findAll();
 	
-	public Page<UsuarioClinico> findAll(Pageable pageable);
+	public Page<Cliente> findAll(Pageable pageable);
 	
-	public UsuarioClinico findById(Long id);
+	public Cliente findById(Long id);
 	
-	public UsuarioClinico save(UsuarioClinico usuarioClinico);
+	public Cliente save(Cliente usuarioClinico);
 	
 	public void delete(Long id);
 	

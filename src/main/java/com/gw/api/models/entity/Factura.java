@@ -40,7 +40,7 @@ public class Factura implements Serializable {
 
 	@JsonIgnoreProperties(value={"facturas", "hibernateLazyInitializer", "handler"}, allowSetters=true)
 	@ManyToOne(fetch = FetchType.LAZY)
-	private UsuarioClinico usuarioClinico;
+	private Cliente cliente;
 
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -88,12 +88,12 @@ public class Factura implements Serializable {
 		this.createAt = createAt;
 	}
 
-	public UsuarioClinico getUsuarioClinico() {
-		return usuarioClinico;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
-	public void setUsuarioClinico(UsuarioClinico usuarioClinico) {
-		this.usuarioClinico = usuarioClinico;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public List<ItemFactura> getItems() {

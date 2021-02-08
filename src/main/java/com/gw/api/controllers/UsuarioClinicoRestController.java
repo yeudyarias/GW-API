@@ -1,5 +1,8 @@
 package com.gw.api.controllers;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +11,15 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,9 +29,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.gw.api.models.entity.UsuarioClinico;
+import com.gw.api.Util.ClienteModel;
+import com.gw.api.Util.UtilModel;
+import com.gw.api.models.entity.Cliente;
+import com.gw.api.models.entity.Enfermedad;
+import com.gw.api.models.entity.Region;
+import com.gw.api.models.services.IUploadFileService;
 import com.gw.api.models.services.IUsuarioClinicoService;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -32,40 +48,56 @@ public class UsuarioClinicoRestController {
 
 	@Autowired
 	private IUsuarioClinicoService usuarioClinicoService;
+	
+	@Autowired
+	private IUploadFileService uploadService;
+	
+	// private final Logger log = LoggerFactory.getLogger(ClienteRestController.class);
 
-	@GetMapping("/usuarioClinicos")
-	public List<UsuarioClinico> index() {
+	@GetMapping("/clientes")
+	public List<Cliente> index() {
 		return usuarioClinicoService.findAll();
 	}
 	
-	@GetMapping("/usuarioClinicos/{id}")
+	@GetMapping("/clientes/page/{page}")
+	public Page<Cliente> index(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 10);
+		return usuarioClinicoService.findAll(pageable);
+	}
+	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
+	@GetMapping("/clientes/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) {
 		
-		UsuarioClinico usuarioClinico = null;
+		Cliente cliente = null;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			usuarioClinico = usuarioClinicoService.findById(id);
+			cliente = usuarioClinicoService.findById(id);
 		} catch(DataAccessException e) {
 			response.put("mensaje", "Error al realizar la consulta en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		if(usuarioClinico == null) {
-			response.put("mensaje", "El usuarioClinico ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
+		if(cliente == null) {
+			response.put("mensaje", "El cliente ID: ".concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<UsuarioClinico>(usuarioClinico, HttpStatus.OK);
+		ClienteModel clienteModel = UtilModel.convertirCliente(cliente);
+		
+		return new ResponseEntity<ClienteModel>(clienteModel, HttpStatus.OK);
 	}
 	
-	@PostMapping("/usuarioClinicos")
-	public ResponseEntity<?> create(@Valid @RequestBody UsuarioClinico usuarioClinico, BindingResult result) {
-		
-		UsuarioClinico usuarioClinicoNew = null;
-		Map<String, Object> response = new HashMap<>();
-		
+	@Secured("ROLE_ADMIN")
+	@PostMapping("/clientes")
+	public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result) {
+				
+		Cliente clienteNew = null;
+		Map<String, Object> response = new HashMap<>();		
+		cliente.setPacenf(UtilModel.setEnfermedades(cliente.getEnfermedades(), listarEnfermedades()));
+		cliente.setFechaIn(new Date());	
 		if(result.hasErrors()) {
 
 			List<String> errors = result.getFieldErrors()
@@ -77,25 +109,26 @@ public class UsuarioClinicoRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		try {
-			usuarioClinicoNew = usuarioClinicoService.save(usuarioClinico);
+		try {								
+			clienteNew = usuarioClinicoService.save(cliente);
 		} catch(DataAccessException e) {
-			response.put("mensaje", "Error al guardar en la base de datos");
+			response.put("mensaje", "Error al realizar el insert en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		response.put("mensaje", "El usuarioClinico ha sido creado con éxito!");
-		response.put("usuarioClinico", usuarioClinicoNew);
+		response.put("mensaje", "El cliente ha sido creado con éxito!");
+		response.put("cliente", clienteNew);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/usuarioClinicos/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody UsuarioClinico usuarioClinico, BindingResult result, @PathVariable Long id) {
+	@Secured("ROLE_ADMIN")
+	@PutMapping("/clientes/{id}")
+	public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable Long id) {
 
-		UsuarioClinico usuarioClinicoActual = usuarioClinicoService.findById(id);
+		Cliente clienteActual = usuarioClinicoService.findById(id);
 
-		UsuarioClinico usuarioClinicoUpdated = null;
+		Cliente clienteUpdated = null;
 
 		Map<String, Object> response = new HashMap<>();
 
@@ -110,48 +143,128 @@ public class UsuarioClinicoRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		if (usuarioClinicoActual == null) {
-			response.put("mensaje", "Error: no se pudo editar, el usuarioClinico ID: "
+		if (clienteActual == null) {
+			response.put("mensaje", "Error: no se pudo editar, el cliente ID: "
 					.concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 
 		try {
 
-			usuarioClinicoActual.setApellido(usuarioClinico.getApellido());
-			usuarioClinicoActual.setNombre(usuarioClinico.getNombre());
-			usuarioClinicoActual.setEmail(usuarioClinico.getEmail());
-			usuarioClinicoActual.setCreateAt(usuarioClinico.getCreateAt());
-
-			usuarioClinicoUpdated = usuarioClinicoService.save(usuarioClinicoActual);
-
+			clienteActual.setIdentificacion(cliente.getIdentificacion());
+			clienteActual.setNombre(cliente.getNombre());
+			clienteActual.setFechaNa(cliente.getFechaNa());
+			clienteActual.setSexo(cliente.getSexo());
+			clienteActual.setGrupoSanguineo(cliente.getGrupoSanguineo());
+			clienteActual.setEstadoCivil(cliente.getEstadoCivil());
+			clienteActual.setReligion(cliente.getReligion());
+			clienteActual.setEmail(cliente.getEmail());
+			clienteActual.setTelefono(cliente.getTelefono());
+			clienteActual.setDireccion(cliente.getDireccion());				
+			clienteActual.setObservacion(cliente.getObservacion());
+			clienteActual.setFechaIn(cliente.getFechaIn());
+			clienteActual.setFoto(cliente.getFoto());
+			clienteActual.setContactos(cliente.getContactos());		
+			clienteActual.setFacturas(cliente.getFacturas());							
+			clienteActual.setPacenf(UtilModel.setEnfermedades(cliente.getEnfermedades(), listarEnfermedades()));
+			clienteUpdated = usuarioClinicoService.save(clienteActual);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al actualizar el usuarioClinico en la base de datos");
+			response.put("mensaje", "Error al actualizar el paciente en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		response.put("mensaje", "El usuarioClinico ha sido actualizado con éxito!");
-		response.put("usuarioClinico", usuarioClinicoUpdated);
+		response.put("mensaje", "El paciente ha sido actualizado con éxito!");
+		response.put("cliente", clienteUpdated);
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/usuarioClinicos/{id}")
+	@Secured("ROLE_ADMIN")
+	@DeleteMapping("/clientes/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
+			Cliente usuarioClinico = usuarioClinicoService.findById(id);
+			String nombreFotoAnterior = usuarioClinico.getFoto();
+			
+			uploadService.eliminar(nombreFotoAnterior);
+			
 		    usuarioClinicoService.delete(id);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al eliminar el usuarioClinico de la base de datos");
+			response.put("mensaje", "Error al eliminar el cliente de la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		response.put("mensaje", "El usuarioClinico eliminado con éxito!");
+		response.put("mensaje", "El cliente eliminado con éxito!");
 		
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
+	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
+	@PostMapping("/clientes/upload")
+	public ResponseEntity<?> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id){
+		Map<String, Object> response = new HashMap<>();
+		
+		Cliente usuarioClinico = usuarioClinicoService.findById(id);
+		
+		if(!archivo.isEmpty()) {
+
+			String nombreArchivo = null;
+			try {
+				nombreArchivo = uploadService.copiar(archivo);
+			} catch (IOException e) {
+				response.put("mensaje", "Error al subir la imagen del cliente");
+				response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+			String nombreFotoAnterior = usuarioClinico.getFoto();
+			
+			uploadService.eliminar(nombreFotoAnterior);
+						
+			usuarioClinico.setFoto(nombreArchivo);
+			
+			usuarioClinicoService.save(usuarioClinico);
+			
+			response.put("cliente", usuarioClinico);
+			response.put("mensaje", "Has subido correctamente la imagen: " + nombreArchivo);
+			
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/uploads/img/{nombreFoto:.+}")
+	public ResponseEntity<Resource> verFoto(@PathVariable String nombreFoto){
+
+		Resource recurso = null;
+		
+		try {
+			recurso = uploadService.cargar(nombreFoto);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		HttpHeaders cabecera = new HttpHeaders();
+		cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"");
+		
+		return new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/clientes/regiones")
+	public List<Region> listarRegiones(){
+		return usuarioClinicoService.findAllRegiones();
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/clientes/enfermedades")
+	public List<Enfermedad> listarEnfermedades(){
+		return usuarioClinicoService.findAllEnfermedades();
+	}
 }
+

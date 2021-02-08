@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gw.api.models.dao.IFacturaDao;
+import com.gw.api.models.dao.IPacienteEnfermedadDao;
 import com.gw.api.models.dao.IProductoDao;
 import com.gw.api.models.dao.IUsuarioClinicoDao;
+import com.gw.api.models.entity.Cliente;
+import com.gw.api.models.entity.Enfermedad;
 import com.gw.api.models.entity.Factura;
 import com.gw.api.models.entity.Producto;
 import com.gw.api.models.entity.Region;
-import com.gw.api.models.entity.UsuarioClinico;
 import com.gw.api.models.services.IUsuarioClinicoService;
 
 @Service
@@ -24,6 +26,9 @@ public class UsuarioClinicoServiceImpl implements IUsuarioClinicoService {
 		private IUsuarioClinicoDao usuarioClinicoDao;
 		
 		@Autowired
+		private IPacienteEnfermedadDao pacienteEnfermedadDao;
+		
+		@Autowired
 		private IFacturaDao facturaDao;
 		
 		@Autowired
@@ -31,25 +36,25 @@ public class UsuarioClinicoServiceImpl implements IUsuarioClinicoService {
 
 		@Override
 		@Transactional(readOnly = true)
-		public List<UsuarioClinico> findAll() {
-			return (List<UsuarioClinico>) usuarioClinicoDao.findAll();
+		public List<Cliente> findAll() {
+			return (List<Cliente>) usuarioClinicoDao.findAll();
 		}
 
 		@Override
 		@Transactional(readOnly = true)
-		public Page<UsuarioClinico> findAll(Pageable pageable) {
+		public Page<Cliente> findAll(Pageable pageable) {
 			return usuarioClinicoDao.findAll(pageable);
 		}
 		
 		@Override
 		@Transactional(readOnly = true)
-		public UsuarioClinico findById(Long id) {
+		public Cliente findById(Long id) {
 			return usuarioClinicoDao.findById(id).orElse(null);
 		}
 
 		@Override
 		@Transactional
-		public UsuarioClinico save(UsuarioClinico cliente) {
+		public Cliente save(Cliente cliente) {
 			return usuarioClinicoDao.save(cliente);
 		}
 
@@ -63,6 +68,12 @@ public class UsuarioClinicoServiceImpl implements IUsuarioClinicoService {
 		@Transactional(readOnly = true)
 		public List<Region> findAllRegiones() {
 			return usuarioClinicoDao.findAllRegiones();
+		}
+		
+		@Override
+		@Transactional(readOnly = true)
+		public List<Enfermedad> findAllEnfermedades() {
+			return usuarioClinicoDao.findAllEnfermedades();
 		}
 
 		@Override
@@ -81,6 +92,12 @@ public class UsuarioClinicoServiceImpl implements IUsuarioClinicoService {
 		@Transactional
 		public void deleteFacturaById(Long id) {
 			facturaDao.deleteById(id);
+		}
+		
+		@Override
+		@Transactional
+		public void deleteEnfermedad(Long id) {
+			pacienteEnfermedadDao.deleteById(id);
 		}
 
 		@Override

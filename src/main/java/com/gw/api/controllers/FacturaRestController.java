@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gw.api.models.entity.Factura;
 import com.gw.api.models.entity.Producto;
-import com.gw.api.models.services.IClienteService;
+import com.gw.api.models.services.IUsuarioClinicoService;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -25,34 +25,34 @@ import com.gw.api.models.services.IClienteService;
 public class FacturaRestController {
 
 	@Autowired
-	private IClienteService clienteService;
+	private IUsuarioClinicoService usuarioClinicoService;
 
 	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/facturas/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Factura show(@PathVariable Long id) {
-		return clienteService.findFacturaById(id);
+		return usuarioClinicoService.findFacturaById(id);
 	}
 	
 	@Secured({"ROLE_ADMIN"})
 	@DeleteMapping("/facturas/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
-		clienteService.deleteFacturaById(id);
+		usuarioClinicoService.deleteFacturaById(id);
 	}
 	
 	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/facturas/filtrar-productos/{term}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Producto> filtrarProductos(@PathVariable String term){
-		return clienteService.findProductoByNombre(term);
+		return usuarioClinicoService.findProductoByNombre(term);
 	}
 	
 	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/facturas")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Factura crear(@RequestBody Factura factura) {
-		return clienteService.saveFactura(factura);
+		return usuarioClinicoService.saveFactura(factura);
 	}
 
 }
