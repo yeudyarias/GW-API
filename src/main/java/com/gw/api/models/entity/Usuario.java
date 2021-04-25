@@ -1,6 +1,7 @@
 package com.gw.api.models.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,12 +15,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,11 +39,31 @@ public class Usuario implements Serializable {
 
 	private Boolean enabled;
 	
+	@NotEmpty(message ="no puede estar vacio")
+	@Size(min=4, max=12, message="el tamaño tiene que estar entre 4 y 12")
+	@Column(nullable=false)
 	private String nombre;
+	
+	@NotEmpty(message ="no puede estar vacio")
 	private String apellido;
 	
-	@Column(unique = true)
+	@NotEmpty(message ="no puede estar vacio")
+	@Email(message="no es una dirección de correo bien formada")
+	@Column(nullable=false, unique=true)
 	private String email;
+	
+	@NotNull(message ="no puede estar vacio")
+	@Column(name="create_at")
+	@Temporal(TemporalType.DATE)
+	private Date createAt;
+	
+	private String foto;	
+	private String type;
+	
+	@Column(length=100000)
+	private byte[] picByte;
+	
+	private Boolean cambioPassword;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name="usuarios_roles", joinColumns= @JoinColumn(name="usuario_id"),
@@ -107,6 +134,50 @@ public class Usuario implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public Date getCreateAt() {
+		return createAt;
+	}
+
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public Boolean getCambioPassword() {
+		return cambioPassword;
+	}
+
+	public void setCambioPassword(Boolean cambioPassword) {
+		this.cambioPassword = cambioPassword;
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public byte[] getPicByte() {
+		return picByte;
+	}
+
+	public void setPicByte(byte[] picByte) {
+		this.picByte = picByte;
+	}
+
+
+
+
 
 	/**
 	 * 

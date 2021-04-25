@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gw.api.models.services.IUploadFileService;
 
 @Service
-public class UploadFileServiceImpl implements IUploadFileService {
+public class UploadFileServiceImpl implements IUploadFileService{
 	
 	private final Logger log = LoggerFactory.getLogger(UploadFileServiceImpl.class);
 	

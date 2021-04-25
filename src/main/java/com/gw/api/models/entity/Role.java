@@ -18,6 +18,9 @@ public class Role implements Serializable{
 	private Long id;
 	
 	@Column(unique=true, length=20)
+	private String codigo;
+	
+	@Column(unique=true, length=20)
 	private String nombre;
 	
 	public Long getId() {
@@ -35,6 +38,16 @@ public class Role implements Serializable{
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
 
 	/**
 	 * 

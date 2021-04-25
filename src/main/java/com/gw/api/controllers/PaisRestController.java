@@ -105,7 +105,7 @@ public class PaisRestController {
 
 		GWPais paisUpdated = null;
 
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>(); 
 
 		if (result.hasErrors()) {
 
