@@ -17,10 +17,7 @@ public class GWDocumentoEmpleado {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idDocumentoEmpleado;
-	@NotEmpty(message = "no puede estar vacio")
-	@Column(nullable = false, unique = false)
-	private Long idEmpleado;
+	private Long idDocumentoEmpleado;	
 	@NotEmpty(message = "no puede estar vacio")
 	@Column(nullable = false, unique = false)
 	private Long idProyecto;
@@ -51,14 +48,6 @@ public class GWDocumentoEmpleado {
 
 	public void setIdDocumentoEmpleado(Long idDocumentoEmpleado) {
 		this.idDocumentoEmpleado = idDocumentoEmpleado;
-	}
-
-	public Long getIdEmpleado() {
-		return idEmpleado;
-	}
-
-	public void setIdEmpleado(Long idEmpleado) {
-		this.idEmpleado = idEmpleado;
 	}
 
 	public Long getIdProyecto() {

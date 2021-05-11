@@ -48,21 +48,11 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fechaNa;
 
-	@NotEmpty(message = "no puede estar vacio")
-	@Column(name = "grupo_sanguineo")
-	private String grupoSanguineo;
 
 	@NotEmpty(message = "no puede estar vacio")
 	@Column(name = "estado_civil")
 	private String estadoCivil;
 
-	@NotEmpty(message = "no puede estar vacio")
-	private String religion;
-
-	@NotEmpty(message = "no puede estar vacio")
-	@Email(message = "no es una dirección de correo bien formada")
-	@Column(nullable = false, unique = true)
-	private String email;
 
 	@NotEmpty(message = "no puede estar vacio")
 	private String telefono;
@@ -76,37 +66,30 @@ public class Cliente implements Serializable {
 	@Column(nullable = false)
 	private String direccion;
 
-	private String foto;
 	
 	@NotEmpty(message = "no puede estar vacio")
 	private String sexo;
-
-	@JsonIgnoreProperties(value = { "cliente", "hibernateLazyInitializer", "handler" }, allowSetters = true)
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
-	private List<Factura> facturas;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler" })
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
-	private List<Contacto> contactos;
-	
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler" })
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "cliente_id")
-	private List<PacienteEnfermedad>  pacenf;
+	private List<Contacto> contactos;	
 	
 	@NotEmpty(message = "no puede estar vacio")
 	@Size(min = 4, max = 200, message = "el tamaño tiene que estar entre 4 y 200")
 	@Column(nullable = false)
 	private String observacion;
+	
+	@Column(nullable = false)
+	private Boolean habilitado;
+	
 		
 	
 	
 	@Transient
 	private List<String> enfermedades;
 
-	public Cliente() {
-		this.facturas = new ArrayList<>();
+	public Cliente() {		
 	}
 
 	public Long getId() {
@@ -149,14 +132,6 @@ public class Cliente implements Serializable {
 		this.sexo = sexo;
 	}
 
-	public String getGrupoSanguineo() {
-		return grupoSanguineo;
-	}
-
-	public void setGrupoSanguineo(String grupoSanguineo) {
-		this.grupoSanguineo = grupoSanguineo;
-	}
-
 	public String getEstadoCivil() {
 		return estadoCivil;
 	}
@@ -165,21 +140,6 @@ public class Cliente implements Serializable {
 		this.estadoCivil = estadoCivil;
 	}
 
-	public String getReligion() {
-		return religion;
-	}
-
-	public void setReligion(String religion) {
-		this.religion = religion;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public String getTelefono() {
 		return telefono;
@@ -205,23 +165,6 @@ public class Cliente implements Serializable {
 		this.direccion = direccion;
 	}
 
-	public String getFoto() {
-		return foto;
-	}
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
-
-	public List<Factura> getFacturas() {
-		return facturas;
-	}
-
-	public void setFacturas(List<Factura> facturas) {
-		this.facturas = facturas;
-	}
-	
-
 	public List<Contacto> getContactos() {
 		return contactos;
 	}
@@ -236,14 +179,6 @@ public class Cliente implements Serializable {
 
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
-	}
-
-	public List<PacienteEnfermedad> getPacenf() {
-		return pacenf;
-	}
-
-	public void setPacenf(List<PacienteEnfermedad> pacenf) {
-		this.pacenf = pacenf;
 	}
 
 	public List<String> getEnfermedades() {

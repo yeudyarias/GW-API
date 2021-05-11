@@ -12,22 +12,22 @@ public final class UtilModel {
 	public static ClienteModel convertirCliente(Cliente cliente) {
 		ClienteModel modelo = new ClienteModel();
 		modelo.setDireccion(cliente.getDireccion());
-		modelo.setEmail(cliente.getEmail());
+//		modelo.setEmail(cliente.getEmail());
 		modelo.setEstadoCivil(getEstadoCivil(cliente.getEstadoCivil()));
-		modelo.setFacturas(cliente.getFacturas());
+//		modelo.setFacturas(cliente.getFacturas());
 		modelo.setFechaIn(cliente.getFechaIn());
 		modelo.setFechaNa(cliente.getFechaNa());
-		modelo.setFoto(cliente.getFoto());
-		modelo.setGrupoSanguineo(getGrupoSanguineo(cliente.getGrupoSanguineo()));
+//		modelo.setFoto(cliente.getFoto());
+//		modelo.setGrupoSanguineo(getGrupoSanguineo(cliente.getGrupoSanguineo()));
 		modelo.setId(cliente.getId());
 		modelo.setIdentificacion(cliente.getIdentificacion());
 		modelo.setNombre(cliente.getNombre());		
-		modelo.setReligion(getReligion(cliente.getReligion()));
+//		modelo.setReligion(getReligion(cliente.getReligion()));
 		modelo.setSexo(getSexo(cliente.getSexo()));
 		modelo.setTelefono(cliente.getTelefono());
 		modelo.setContactos(cliente.getContactos());
 		modelo.setObservacion(cliente.getObservacion());
-		modelo.setEnfermedades(getEnfermedades(cliente.getPacenf()));
+//		modelo.setEnfermedades(getEnfermedades(cliente.getPacenf()));
 		return modelo;
 
 	}
@@ -61,17 +61,17 @@ public final class UtilModel {
 		clienteActual.setNombre(cliente.getNombre());
 		clienteActual.setFechaNa(cliente.getFechaNa());
 		clienteActual.setSexo(cliente.getSexo().getCode());
-		clienteActual.setGrupoSanguineo(cliente.getGrupoSanguineo().getCode());
+//		clienteActual.setGrupoSanguineo(cliente.getGrupoSanguineo().getCode());
 		clienteActual.setEstadoCivil(cliente.getEstadoCivil().getCode());
-		clienteActual.setReligion(cliente.getReligion().getCode());
-		clienteActual.setEmail(cliente.getEmail());
+//		clienteActual.setReligion(cliente.getReligion().getCode());
+//		clienteActual.setEmail(cliente.getEmail());
 		clienteActual.setTelefono(cliente.getTelefono());
 		clienteActual.setDireccion(cliente.getDireccion());				
 		clienteActual.setObservacion(cliente.getObservacion());
 		clienteActual.setFechaIn(cliente.getFechaIn());
-		clienteActual.setFoto(cliente.getFoto());
+//		clienteActual.setFoto(cliente.getFoto());
 		clienteActual.setContactos(cliente.getContactos());		
-		clienteActual.setFacturas(cliente.getFacturas());	
+//		clienteActual.setFacturas(cliente.getFacturas());	
 		
 		return clienteActual;
 	}

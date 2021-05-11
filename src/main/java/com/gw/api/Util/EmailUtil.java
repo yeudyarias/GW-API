@@ -1,7 +1,10 @@
 package com.gw.api.Util;
 
-import com.gw.api.models.entity.Usuario;
-import com.sun.mail.smtp.SMTPTransport;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -13,12 +16,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Properties;
+
+import com.gw.api.models.entity.Usuario;
 
 public class EmailUtil {
 
@@ -53,7 +52,7 @@ public class EmailUtil {
 
 			msg.setFrom(new InternetAddress(EMAIL_FROM));
 
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmail(), false));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmpleado().getPersona().getEmail(), false));
 
 			msg.setSubject(EMAIL_SUBJECT);
 
@@ -61,7 +60,7 @@ public class EmailUtil {
 			// msg.setText(EMAIL_TEXT);
 
 			// HTML email
-			msg.setDataHandler(new DataHandler(new HTMLDataSource("Hola "+usuario.getNombre() + " "+usuario.getApellido()+" su nueva contraseña es: "+newPassword)));
+			msg.setDataHandler(new DataHandler(new HTMLDataSource("Hola "+usuario.getEmpleado().getPersona().getNombre() + " "+usuario.getEmpleado().getPersona().getApellidos()+" su nueva contraseña es: "+newPassword)));
 			
 			Transport.send(msg);
 

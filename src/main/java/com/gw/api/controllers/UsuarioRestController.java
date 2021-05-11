@@ -1,6 +1,5 @@
 package com.gw.api.controllers;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.SecureRandom;
@@ -8,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
 import javax.validation.Valid;
 
@@ -91,7 +87,7 @@ public class UsuarioRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		
-		usuario.setPicByte(usuario.getPicByte());
+		usuario.getEmpleado().setPicByte(usuario.getEmpleado().getPicByte());
 		
 		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
 	}
@@ -120,7 +116,7 @@ public class UsuarioRestController {
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		usuarioNew.setPicByte(usuarioNew.getPicByte());
+		usuarioNew.getEmpleado().setPicByte(usuarioNew.getEmpleado().getPicByte());
 		
 		response.put("mensaje", "El usuario ha sido creado con éxito!");
 		response.put("usuario", usuarioNew);
@@ -152,18 +148,29 @@ public class UsuarioRestController {
 					.concat(id.toString().concat(" no existe en la base de datos!")));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
+		
+		
+		if (usuario.getActualPassword() != null && usuario.getConfirmNewPassword() != null && !usuario.getActualPassword().isEmpty() && !usuario.getConfirmNewPassword().isEmpty()) {
+			boolean match = passwordEnoder.matches(usuario.getActualPassword(), usuarioActual.getPassword());
+			if (!match) {
+				response.put("mensaje", "La contraseña anterior no coincide con la nueva contraseña");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+			} else  {
+				usuarioActual.setPassword(passwordEnoder.encode(usuario.getNewPassword()));
+			}
+		}
 
 		try {
 
-			usuarioActual.setApellido(usuario.getApellido());
-			usuarioActual.setNombre(usuario.getNombre());
-			usuarioActual.setEmail(usuario.getEmail());
-			usuarioActual.setCreateAt(usuario.getCreateAt());
+			usuarioActual.getEmpleado().getPersona().setApellidos(usuario.getEmpleado().getPersona().getApellidos());
+			usuarioActual.getEmpleado().getPersona().setNombre(usuario.getEmpleado().getPersona().getNombre());
+			usuarioActual.getEmpleado().getPersona().setEmail(usuario.getEmpleado().getPersona().getEmail());			
 			usuarioActual.setEnabled(usuario.getEnabled());	
-			usuarioActual.setType(usuario.getType());
-			usuarioActual.setFoto(usuario.getFoto());
-			usuarioActual.setPicByte(usuario.getPicByte());
+			usuarioActual.getEmpleado().setType(usuario.getEmpleado().getType());
+			usuarioActual.getEmpleado().setFoto(usuario.getEmpleado().getFoto()); 
+			usuarioActual.getEmpleado().setPicByte(usuario.getEmpleado().getPicByte());
 			usuarioActual.setRoles(usuario.getRoles());
+					
 			usuarioUpdated = usuarioService.save(usuarioActual);
 			
 
@@ -186,7 +193,7 @@ public class UsuarioRestController {
 		
 		try {
 			Usuario usuario = usuarioService.findById(id);
-			String nombreFotoAnterior = usuario.getFoto();
+			String nombreFotoAnterior = usuario.getEmpleado().getFoto();
 			
 			uploadService.eliminar(nombreFotoAnterior);
 			
@@ -219,13 +226,13 @@ public class UsuarioRestController {
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
-			String nombreFotoAnterior = usuario.getFoto();
+			String nombreFotoAnterior = usuario.getEmpleado().getFoto();
 			
 			uploadService.eliminar(nombreFotoAnterior);
 			
-			usuario.setType(archivo.getContentType());
-			usuario.setFoto(archivo.getOriginalFilename());
-			usuario.setPicByte(archivo.getBytes());			
+			usuario.getEmpleado().setType(archivo.getContentType());
+			usuario.getEmpleado().setFoto(archivo.getOriginalFilename());
+			usuario.getEmpleado().setPicByte(archivo.getBytes());			
 			
 			usuarioService.save(usuario);
 			
@@ -259,7 +266,7 @@ public class UsuarioRestController {
 			@Valid @RequestBody Usuario user, BindingResult result) {
 
 		Usuario usuarioUpdated = null;
-		Usuario usuario = usuarioService.findByEmail(user.getEmail());
+		Usuario usuario = usuarioService.findByEmail(user.getEmpleado().getPersona().getEmail());
 		Map<String, Object> response = new HashMap<>();
 		
 		if (result.hasErrors()) {
@@ -274,7 +281,7 @@ public class UsuarioRestController {
 
 		if (usuario == null) {
 				response.put("mensaje", "Error: Usuario con el correo indicado ("
-						.concat(user.getEmail().concat(") no existe en la base de datos!")));
+						.concat(user.getEmpleado().getPersona().getEmail().concat(") no existe en la base de datos!")));
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND); 			
 		}
 
@@ -293,7 +300,7 @@ public class UsuarioRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		response.put("mensaje", "Contraseña enviada exitosamente al correo "+usuarioUpdated.getEmail());		
+		response.put("mensaje", "Contraseña enviada exitosamente al correo "+usuarioUpdated.getEmpleado().getPersona().getEmail());		
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);		
 	}
 		

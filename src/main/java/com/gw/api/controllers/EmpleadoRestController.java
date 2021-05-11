@@ -117,13 +117,10 @@ public class EmpleadoRestController {
 		}
 
 		try {
-
-			empleadoActual.setEmail(empleado.getEmail());
-			empleadoActual.setNombre(empleado.getNombre());
+			
 			empleadoActual.setIdentificacion(empleado.getIdentificacion());
 			empleadoActual.setEstadoCivil(empleado.getEstadoCivil());
 			empleadoActual.setFechaNacimiento(empleado.getFechaNacimiento());
-			empleadoActual.setIdEspecialidad(empleado.getIdEspecialidad());
 			empleadoActual.setSexo(empleado.getSexo());
 			empleadoActual.setTelefono(empleado.getTelefono());
 

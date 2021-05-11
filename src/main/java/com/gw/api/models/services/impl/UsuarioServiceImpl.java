@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gw.api.models.dao.IUsuarioDao;
-import com.gw.api.models.entity.Cliente;
+import com.gw.api.models.entity.GWPersona;
 import com.gw.api.models.entity.Role;
 import com.gw.api.models.entity.Usuario;
 import com.gw.api.models.services.IUsuarioService;
@@ -55,7 +55,8 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 	@Transactional(readOnly = true)
 	public Usuario loadUserByEmail(String email) throws UsernameNotFoundException {
 
-		Usuario usuario = usuarioDao.findByEmail(email);
+		GWPersona persona = usuarioDao.findByEmail(email);
+		Usuario usuario = persona.getEmpleado().getUsuario();
 
 		if (usuario == null) {
 			logger.error("Error en el login: no existe usuario en el sistema con el email '" + email + "'!");
@@ -74,7 +75,8 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 
 	@Override
 	public Usuario findByEmail(String email) {
-		return usuarioDao.findByEmail(email);
+		GWPersona p = usuarioDao.findByEmail(email);
+		return p.getEmpleado().getUsuario();
 	}
 
 	@Override
@@ -102,13 +104,16 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 
 	@Override
 	public Page<Usuario> findAll(Pageable pageable) {
-		return usuarioDao.findAll(pageable);
+		List<Usuario> li = usuarioDao.findAll();
+		Page<Usuario> l = usuarioDao.findAll(pageable);
+	System.out.print("Existen: "+l.getSize());
+		return l;
 	}
 
 	@Override
 	public List<Role> getRoles(Long id) {
 		return usuarioDao.getRoles(id);
-		
+
 	}
 
 }

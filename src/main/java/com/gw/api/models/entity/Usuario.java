@@ -1,7 +1,6 @@
 package com.gw.api.models.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,14 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "usuarios")
@@ -29,54 +27,44 @@ public class Usuario implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long idUsuario;
 
 	@Column(unique = true, length = 20)
 	private String username;
 
-	@Column(length = 60)
+	@Column(length = 100)
 	private String password;
 
 	private Boolean enabled;
 	
-	@NotEmpty(message ="no puede estar vacio")
-	@Size(min=4, max=12, message="el tamaño tiene que estar entre 4 y 12")
-	@Column(nullable=false)
-	private String nombre;
-	
-	@NotEmpty(message ="no puede estar vacio")
-	private String apellido;
-	
-	@NotEmpty(message ="no puede estar vacio")
-	@Email(message="no es una dirección de correo bien formada")
-	@Column(nullable=false, unique=true)
-	private String email;
-	
-	@NotNull(message ="no puede estar vacio")
-	@Column(name="create_at")
-	@Temporal(TemporalType.DATE)
-	private Date createAt;
-	
-	private String foto;	
-	private String type;
-	
-	@Column(length=100000)
-	private byte[] picByte;
-	
+	@Column(name = "cambio_password")
 	private Boolean cambioPassword;
+	
+	@JsonManagedReference
+	@OneToOne
+	@JoinColumn(name = "id_empleado", updatable = false, nullable = false)
+	private GWEmpleado empleado;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name="usuarios_roles", joinColumns= @JoinColumn(name="usuario_id"),
 	inverseJoinColumns=@JoinColumn(name="role_id"),
 	uniqueConstraints= {@UniqueConstraint(columnNames= {"usuario_id", "role_id"})})
 	private List<Role> roles;
+	
+	@Transient
+	private String actualPassword;
+	@Transient
+	private String newPassword;
+	@Transient
+	private String confirmNewPassword;
 
-	public Long getId() {
-		return id;
+
+	public Long getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getUsername() {
@@ -109,47 +97,7 @@ public class Usuario implements Serializable {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getApellido() {
-		return apellido;
-	}
-
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getCreateAt() {
-		return createAt;
-	}
-
-	public void setCreateAt(Date createAt) {
-		this.createAt = createAt;
-	}
-
-	public String getFoto() {
-		return foto;
-	}
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
+	}	
 
 	public Boolean getCambioPassword() {
 		return cambioPassword;
@@ -158,24 +106,38 @@ public class Usuario implements Serializable {
 	public void setCambioPassword(Boolean cambioPassword) {
 		this.cambioPassword = cambioPassword;
 	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+	public String getConfirmNewPassword() {
+		return confirmNewPassword;
+	}
+
+	public void setConfirmNewPassword(String confirmNewPassword) {
+		this.confirmNewPassword = confirmNewPassword;
+	}
+
+	public String getActualPassword() {
+		return actualPassword;
+	}
+
+	public void setActualPassword(String actualPassword) {
+		this.actualPassword = actualPassword;
+	}
 	
-	public String getType() {
-		return type;
+	public GWEmpleado getEmpleado() {
+		return empleado;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setEmpleado(GWEmpleado empleado) {
+		this.empleado = empleado;
 	}
-
-	public byte[] getPicByte() {
-		return picByte;
-	}
-
-	public void setPicByte(byte[] picByte) {
-		this.picByte = picByte;
-	}
-
-
 
 
 
