@@ -92,6 +92,29 @@ public class UsuarioRestController {
 		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
 	}
 	
+	@GetMapping("/usuarios/byEmpleado/{id}")
+	public ResponseEntity<?> showByIdEmpleado(@PathVariable Long id) {
+		
+		Usuario usuario = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			usuario = usuarioService.findByIdEmpleado(id);
+		} catch(DataAccessException e) {
+			response.put("mensaje", "Error al realizar la consulta en la base de datos");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		if(usuario == null) {
+			usuario = new Usuario();
+		}
+		
+		usuario.getEmpleado().setPicByte(usuario.getEmpleado().getPicByte());
+		
+		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+	}
+	
 	@PostMapping("/usuarios")
 	public ResponseEntity<?> create(@Valid @RequestBody Usuario usuario, BindingResult result) {
 		

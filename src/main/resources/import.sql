@@ -21,9 +21,9 @@ INSERT INTO persona (nombre,apellidos,identificacion,tipo_identificacion, fecha_
 
 /* CREAMOS EMPLEADOS */
 
-INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (1,1,1,NOW(),NOW(),'1',3000,10,1,1);
-INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (2,2,1,NOW(),NOW(),'1',3000,10,1,2);
-INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (3,3,4,NOW(),NOW(),'1',3000,10,1,3);
+INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (1,1,1,NOW(),NOW(),'2',0,10,1,1);
+INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (2,2,1,NOW(),NOW(),'1',3000,0,1,2);
+INSERT INTO empleado (id_empleado, id_cargo, id_pais,fecha_inicio,fecha_fin,tipo_salario,salario,monto_hora,estado,id_persona) VALUES (3,3,4,NOW(),NOW(),'1',3000,0,1,3);
 
 
 /* Creamos algunos usuarios con sus roles*/ 

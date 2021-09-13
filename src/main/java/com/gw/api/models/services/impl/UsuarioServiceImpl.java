@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -41,6 +42,11 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 			logger.error("Error en el login: no existe el usuario '" + username + "' en el sistema!");
 			throw new UsernameNotFoundException(
 					"Error en el login: no existe el usuario '" + username + "' en el sistema!");
+		}
+		if (!usuario.getEnabled()) {
+			logger.error("Error en el login: el usuario '" + username + "' se encuentra  deshabilitado!");
+			throw new DisabledException(
+					"Error en el login: el usuario '" + username + "' se encuentra deshabilitado!");
 		}
 
 		List<GrantedAuthority> authorities = usuario.getRoles().stream()
@@ -98,15 +104,20 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public Usuario findByIdEmpleado(Long id) {
+		return usuarioDao.findByIdEmpleado(id);
+	}
+
+	@Override
 	public List<Usuario> findAll() {
 		return (List<Usuario>) usuarioDao.findAll();
 	}
 
 	@Override
-	public Page<Usuario> findAll(Pageable pageable) {
-		List<Usuario> li = usuarioDao.findAll();
+	public Page<Usuario> findAll(Pageable pageable) {		
 		Page<Usuario> l = usuarioDao.findAll(pageable);
-	System.out.print("Existen: "+l.getSize());
+		System.out.print("Existen: "+l.getSize());
 		return l;
 	}
 

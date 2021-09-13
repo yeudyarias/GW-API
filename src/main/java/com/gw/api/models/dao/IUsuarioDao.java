@@ -19,6 +19,9 @@ public interface IUsuarioDao extends JpaRepository<Usuario, Long>{
 	@Query("select u from GWPersona u where u.email=?1")
 	public GWPersona findByEmail(String email);
 	
+	@Query("select u from Usuario u where u.empleado.idEmpleado=?1")
+	public Usuario findByIdEmpleado(Long id);
+	
 	@Query("select r from Role r where r.id in (select u.role_id from UsuariosRoles u where u.role_id = r.id and u.usuario_id = ?1)")
 	public List<Role> getRoles(Long idUsuario);
 	

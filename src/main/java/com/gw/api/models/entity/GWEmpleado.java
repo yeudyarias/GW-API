@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -55,12 +56,10 @@ public class GWEmpleado implements Serializable {
 	@NotEmpty(message = "no puede estar vacio")
 	@Column(nullable = false)
 	private String tipoSalario;
-	
-	@NotEmpty(message = "no puede estar vacio")
+		
 	@Column(nullable = false)
 	private BigDecimal salario;
 	
-	@NotEmpty(message = "no puede estar vacio")
 	@Column(nullable = false)
 	private BigDecimal montoHora;
 	
@@ -82,6 +81,7 @@ public class GWEmpleado implements Serializable {
 	
 	@JsonBackReference
 	@OneToOne(mappedBy = "empleado", cascade = CascadeType.ALL) 
+	@PrimaryKeyJoinColumn
     private Usuario usuario;
 	
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })

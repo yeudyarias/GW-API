@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -41,7 +40,7 @@ public class Usuario implements Serializable {
 	private Boolean cambioPassword;
 	
 	@JsonManagedReference
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_empleado", updatable = false, nullable = false)
 	private GWEmpleado empleado;
 
@@ -145,4 +144,10 @@ public class Usuario implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+
+	public Usuario orElse(Object object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

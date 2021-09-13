@@ -14,7 +14,8 @@ public interface IUsuarioService {
 	public Usuario findByUsername(String username);
 
 	public Usuario findByEmail(String email);
-		
+	
+	public Usuario findByIdEmpleado(Long id);		
 
 	Usuario loadUserByEmail(String email) throws UsernameNotFoundException;
 

@@ -1,9 +1,9 @@
 package com.gw.api.models.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.gw.api.models.entity.Empleado;
+import com.gw.api.models.entity.GWEmpleado;
 
-public interface IEmpleadoDao  extends CrudRepository<Empleado, Long>{
+public interface IEmpleadoDao  extends  JpaRepository<GWEmpleado, Long>{
 
 }
